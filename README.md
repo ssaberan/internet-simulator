@@ -72,9 +72,9 @@ internet-simulator/
 │   ├── components/                 # Reusable UI components
 │   ├── navigation/                 # Navigation configuration
 │   │   └── AppNavigator.js        # Main navigation stack
-│   ├── pages/                     # Simulated web pages (scalable to thousands)
-│   └── screens/                   # App screens
-│       └── SearchScreen.js        # Main search interface ("Interverse")
+│   ├── screens/                   # App screens
+│   │   └── SearchScreen.js        # Main search interface ("Interverse")
+│   └── sites/                     # Simulated websites
 ├── App.js                         # Root component
 ├── package.json                   # Dependencies and scripts
 └── README.md                      # This file
@@ -86,47 +86,6 @@ internet-simulator/
 - **Modern UI**: Responsive design that works in portrait and landscape
 - **Navigation Ready**: Stack navigation setup for future screens
 - **Scalable Architecture**: Organized folder structure for thousands of pages
-
-## 🚧 Development
-
-### Adding New Screens
-1. Create new screen components in `src/screens/`
-2. Add them to the navigation stack in `src/navigation/AppNavigator.js`
-
-### Adding Simulated Web Pages
-1. Create page components in `src/pages/`
-2. Organize in subdirectories by category or domain
-3. Link them through the search functionality
-
-### Adding Reusable Components
-- Place shared UI components in `src/components/`
-- Import and use across different screens
-
-## 🔧 Troubleshooting
-
-### Common Issues
-
-**Metro Bundler won't start:**
-- Make sure no other Metro instances are running
-- Try `npx expo start --clear` to clear cache
-
-**Can't connect to development server:**
-- Ensure your phone and computer are on the same Wi-Fi network
-- Check firewall settings on your computer
-
-**Package version warnings:**
-- These are usually safe to ignore for development
-- Run `npx expo install --fix` to update to compatible versions
-
-**App won't load on device:**
-- Make sure Expo Go is up to date
-- Try shaking the device and selecting "Reload"
-
-## 📚 Learn More
-
-- [Expo Documentation](https://docs.expo.dev/)
-- [React Navigation](https://reactnavigation.org/)
-- [React Native Documentation](https://reactnative.dev/)
 
 ## 🎯 Next Steps
 

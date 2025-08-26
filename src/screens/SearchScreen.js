@@ -1,7 +1,9 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, StatusBar } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, StatusBar, ScrollView } from 'react-native';
+import sites from '../sites';
 
 const SearchScreen = ({ navigation }) => {
+  const [query, setQuery] = useState('');
   return (
     <SafeAreaView style={styles.safeArea}>
       <StatusBar barStyle="dark-content" />
@@ -11,10 +13,31 @@ const SearchScreen = ({ navigation }) => {
           style={styles.searchInput}
           placeholder="Search the offline web..."
           placeholderTextColor="#999"
+          value={query}
+          onChangeText={setQuery}
+          onSubmitEditing={() => navigation.navigate('SearchResults', { query })}
         />
-        <TouchableOpacity style={styles.searchButton}>
+        <TouchableOpacity style={styles.searchButton} onPress={() => navigation.navigate('SearchResults', { query })}>
           <Text style={styles.searchButtonText}>Search</Text>
         </TouchableOpacity>
+
+        <ScrollView style={styles.quickLinks} contentContainerStyle={styles.quickLinksContent}>
+          <Text style={styles.quickTitle}>Popular sites</Text>
+          {sites.map((site) => (
+            <TouchableOpacity
+              key={site.id}
+              style={styles.siteLink}
+              onPress={() => {
+                if (site.id === 'metube') {
+                  navigation.navigate('MeTubeHome');
+                }
+              }}
+            >
+              <Text style={styles.siteLinkText}>{site.name}</Text>
+              <Text style={styles.siteLinkDomain}>{site.domain}</Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
     </SafeAreaView>
   );
@@ -68,6 +91,36 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  quickLinks: {
+    marginTop: 30,
+    width: '100%',
+  },
+  quickLinksContent: {
+    alignItems: 'stretch',
+  },
+  quickTitle: {
+    fontSize: 16,
+    fontWeight: '800',
+    marginBottom: 12,
+    color: '#333',
+  },
+  siteLink: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+    marginBottom: 12,
+  },
+  siteLinkText: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#111',
+  },
+  siteLinkDomain: {
+    color: '#666',
+    marginTop: 4,
   },
 });
 
