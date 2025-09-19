@@ -1,12 +1,15 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
 import { getVideoById, videos as allVideos } from './videos';
 import VideoCard from '../../components/VideoCard';
+import AddressBarSpacer from '../../components/AddressBarSpacer';
+import { useAddressBar } from '../../context/AddressBarContext';
 
 const MeTubeWatchScreen = ({ route, navigation }) => {
   const { id } = route.params || {};
   const video = useMemo(() => getVideoById(id), [id]);
   const recommendations = useMemo(() => allVideos.filter((v) => v.category === (video?.category || '') && v.id !== id).slice(0, 10), [id, video]);
+  const { onScroll, setCurrentPageMeta } = useAddressBar();
 
   if (!video) {
     return (
@@ -16,9 +19,14 @@ const MeTubeWatchScreen = ({ route, navigation }) => {
     );
   }
 
+  useEffect(() => {
+    setCurrentPageMeta({ routeName: 'MeTubeWatch', title: video?.title || 'MeTube', params: { id } });
+  }, [setCurrentPageMeta, id, video]);
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <ScrollView contentContainerStyle={styles.container}>
+      <AddressBarSpacer />
+      <ScrollView contentContainerStyle={styles.container} onScroll={onScroll} scrollEventThrottle={16}>
         <View style={[styles.player, { backgroundColor: video.thumbnailColor }]}>
           <View style={styles.playButton}>
             <Text style={styles.playIcon}>▶</Text>

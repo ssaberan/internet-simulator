@@ -1,7 +1,9 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, StatusBar, FlatList, TouchableOpacity, TextInput } from 'react-native';
 import { searchInterverse } from '../search';
 import VideoCard from '../components/VideoCard';
+import AddressBarSpacer from '../components/AddressBarSpacer';
+import { useAddressBar } from '../context/AddressBarContext';
 
 const ResultSiteCard = ({ result, onPress }) => (
   <TouchableOpacity onPress={onPress} style={styles.siteCard}>
@@ -16,6 +18,7 @@ const ResultSiteCard = ({ result, onPress }) => (
 const SearchResultsScreen = ({ route, navigation }) => {
   const initialQuery = route.params?.query || '';
   const [query, setQuery] = useState(initialQuery);
+  const { onScroll, setCurrentPageMeta } = useAddressBar();
 
   const results = useMemo(() => searchInterverse(query), [query]);
 
@@ -43,8 +46,13 @@ const SearchResultsScreen = ({ route, navigation }) => {
     return null;
   };
 
+  useEffect(() => {
+    setCurrentPageMeta({ routeName: 'SearchResults', title: 'Interverse', params: { query } });
+  }, [setCurrentPageMeta, query]);
+
   return (
     <SafeAreaView style={styles.safeArea}>
+      <AddressBarSpacer />
       <StatusBar barStyle="dark-content" />
       <View style={styles.header}> 
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}><Text style={styles.backText}>‹</Text></TouchableOpacity>
@@ -62,6 +70,8 @@ const SearchResultsScreen = ({ route, navigation }) => {
         keyExtractor={(_, idx) => String(idx)}
         renderItem={renderItem}
         contentContainerStyle={styles.content}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
       />
     </SafeAreaView>
   );

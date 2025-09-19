@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, StatusBar, ScrollView } from 'react-native';
 import sites from '../sites';
+import AddressBarSpacer from '../components/AddressBarSpacer';
+import { useAddressBar } from '../context/AddressBarContext';
 
 const SearchScreen = ({ navigation }) => {
   const [query, setQuery] = useState('');
+  const { onScroll, setCurrentPageMeta } = useAddressBar();
+
+  useEffect(() => {
+    setCurrentPageMeta({ routeName: 'Search', title: 'Interverse', params: {} });
+  }, [setCurrentPageMeta]);
   return (
     <SafeAreaView style={styles.safeArea}>
+      <AddressBarSpacer />
       <StatusBar barStyle="dark-content" />
       <View style={styles.container}>
         <Text style={styles.title}>Interverse</Text>
@@ -21,7 +29,12 @@ const SearchScreen = ({ navigation }) => {
           <Text style={styles.searchButtonText}>Search</Text>
         </TouchableOpacity>
 
-        <ScrollView style={styles.quickLinks} contentContainerStyle={styles.quickLinksContent}>
+        <ScrollView
+          style={styles.quickLinks}
+          contentContainerStyle={styles.quickLinksContent}
+          onScroll={onScroll}
+          scrollEventThrottle={16}
+        >
           <Text style={styles.quickTitle}>Popular sites</Text>
           {sites.map((site) => (
             <TouchableOpacity

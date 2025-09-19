@@ -31,6 +31,12 @@ Before running the app, make sure you have the following installed:
    npm start
    ```
 
+   You might need to run the following from the root of the project instead:
+   ```bash
+   rm -rf .expo .expo-shared node_modules/.cache
+   npx expo start --tunnel --clear
+   ```
+
 ## 📱 Running the App
 
 ### Method 1: Mobile Device (Recommended)

@@ -1,13 +1,16 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView, StatusBar, FlatList, TouchableOpacity, TextInput, ScrollView } from 'react-native';
 import VideoCard from '../../components/VideoCard';
 import videosData from './videos';
+import AddressBarSpacer from '../../components/AddressBarSpacer';
+import { useAddressBar } from '../../context/AddressBarContext';
 
 const categories = ['All', 'Music', 'Gaming', 'Education', 'Science', 'News', 'Sports', 'Tech', 'Cooking', 'Travel', 'Comedy', 'DIY', 'Art'];
 
 const MeTubeHomeScreen = ({ navigation }) => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [filterText, setFilterText] = useState('');
+  const { onScroll, setCurrentPageMeta } = useAddressBar();
 
   const filtered = useMemo(() => {
     const list = activeCategory === 'All' ? videosData : videosData.filter((v) => v.category === activeCategory);
@@ -27,8 +30,13 @@ const MeTubeHomeScreen = ({ navigation }) => {
     />
   );
 
+  useEffect(() => {
+    setCurrentPageMeta({ routeName: 'MeTubeHome', title: 'MeTube', params: {} });
+  }, [setCurrentPageMeta]);
+
   return (
     <SafeAreaView style={styles.safeArea}>
+      <AddressBarSpacer />
       <StatusBar barStyle="dark-content" />
       <View style={styles.header}> 
         <Text style={styles.logo}><Text style={{ color: '#e53935' }}>Me</Text>Tube</Text>
@@ -46,7 +54,7 @@ const MeTubeHomeScreen = ({ navigation }) => {
         />
       </View>
       <View style={styles.categoryRow}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} onScroll={onScroll} scrollEventThrottle={16}>
           {categories.map((c) => (
             <TouchableOpacity
               key={c}
@@ -63,6 +71,8 @@ const MeTubeHomeScreen = ({ navigation }) => {
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         contentContainerStyle={styles.listContent}
+        onScroll={onScroll}
+        scrollEventThrottle={16}
       />
     </SafeAreaView>
   );
