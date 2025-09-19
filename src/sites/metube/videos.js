@@ -29,6 +29,12 @@ const categories = [
   { name: 'Comedy', channels: ['LaughTrack', 'Sketch Nook', 'Bit Gags'] },
   { name: 'DIY', channels: ['MakerMind', 'FixItFast', 'Home Hacks'] },
   { name: 'Art', channels: ['CanvasLab', 'Ink&Pixel', 'Color Theory'] },
+  { name: 'Vlogs', channels: ['Daily Dave', 'City Wanderer', 'HomeLife'] },
+  { name: 'ASMR', channels: ['Tingle Time', 'Soft Sounds', 'Whisper Lab'] },
+  { name: 'Pranks', channels: ['Prank Patrol', 'Gotcha Gang', 'Hidden Camera HQ'] },
+  { name: 'Memes', channels: ['Meme Stream', 'Dank Depot', 'Template Town'] },
+  { name: 'Absurdist Humor', channels: ['Nonsense Network', 'Banana Desk', 'Left Field Laughs'] },
+  { name: 'Brain Rot', channels: ['Infinite Scroll', 'Dopamine Loops', 'Short Attention'] },
 ];
 
 const sampleTitles = {
@@ -104,6 +110,42 @@ const sampleTitles = {
     'Sketching People in Motion',
     'Color Theory Essentials',
   ],
+  Vlogs: [
+    'Day in My Life',
+    'City Walk Vlog',
+    'Morning Routine Vlog',
+    'Travel Vlog: Weekend Getaway',
+  ],
+  ASMR: [
+    'Keyboard Typing ASMR',
+    'Soft Spoken Storytime',
+    'Tapping and Scratching',
+    'Sleep Triggers Compilation',
+  ],
+  Pranks: [
+    'Epic Office Prank',
+    'Prank Call Compilation',
+    'Hidden Camera Reactions',
+    'Public Pranks Gone Right',
+  ],
+  Memes: [
+    'Top Memes of the Week',
+    'Meme Review',
+    'Dank Meme Compilation',
+    'Try Not to Laugh: Memes',
+  ],
+  'Absurdist Humor': [
+    'The Chair That Sings',
+    'Banana Interview Series',
+    'Microwave Philosophy',
+    'Unboxing Nothing',
+  ],
+  'Brain Rot': [
+    'Infinite Skibidi Megamix',
+    'Gyatt Compilation 24/7',
+    'Sigma Edit Marathon',
+    'Random Core Aesthetic',
+  ],
 };
 
 function toDuration(minutes) {
@@ -126,15 +168,66 @@ function makeId(categoryIndex, i) {
   return `v_${categoryIndex}_${i}`;
 }
 
+// Fisher-Yates shuffle to randomize arrays without mutating input
+function shuffle(arr) {
+  const copy = [...arr];
+  for (let i = copy.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy;
+}
+
+// Expand a small set of base titles into a larger set of unique, varied titles
+function expandTitles(baseTitles, count) {
+  const variants = [
+    'Chill Mix',
+    'Live Session',
+    'Extended Cut',
+    'Compilation',
+    'Highlights',
+    'Tutorial',
+    '2025 Edition',
+    'Instrumental',
+    'Ambient',
+    'Night Drive',
+    'Study Mix',
+    'Acoustic',
+    'Remastered',
+    'Deep Focus',
+    'Beginner Guide',
+    'Pro Tips',
+  ];
+
+  const pool = [];
+  baseTitles.forEach((base) => {
+    pool.push(base);
+    variants.forEach((variant) => {
+      pool.push(`${base} - ${variant}`);
+    });
+  });
+
+  const unique = Array.from(new Set(pool));
+  const shuffled = shuffle(unique);
+  if (shuffled.length >= count) return shuffled.slice(0, count);
+  // Fallback (unlikely): pad with generic unique titles
+  const padded = [...shuffled];
+  for (let i = shuffled.length; i < count; i += 1) {
+    padded.push(`Untitled Video Variant ${i + 1}`);
+  }
+  return padded;
+}
+
 export function generateVideos() {
   const all = [];
   let colorIndex = 0;
   categories.forEach((cat, cIdx) => {
-    const titles = sampleTitles[cat.name] || ['Untitled Video'];
-    // Generate 8 videos per category
+    const baseTitles = sampleTitles[cat.name] || ['Untitled Video'];
+    const titles = expandTitles(baseTitles, 8);
+    // Generate 8 videos per category with unique, varied titles
     for (let i = 0; i < 8; i += 1) {
       const id = makeId(cIdx, i);
-      const title = `${randomFrom(titles)} ${i + 1}`;
+      const title = titles[i % titles.length];
       const channel = randomFrom(cat.channels);
       const duration = toDuration(4 + Math.random() * 30);
       const views = formatViews(Math.floor(1000 + Math.random() * 5_000_000));

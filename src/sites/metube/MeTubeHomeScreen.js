@@ -5,7 +5,7 @@ import videosData from './videos';
 import AddressBarSpacer from '../../components/AddressBarSpacer';
 import { useAddressBar } from '../../context/AddressBarContext';
 
-const categories = ['All', 'Music', 'Gaming', 'Education', 'Science', 'News', 'Sports', 'Tech', 'Cooking', 'Travel', 'Comedy', 'DIY', 'Art'];
+const categories = ['All', 'Music', 'Gaming', 'Education', 'Science', 'News', 'Sports', 'Tech', 'Cooking', 'Travel', 'Comedy', 'DIY', 'Art', 'Vlogs', 'ASMR', 'Pranks', 'Memes', 'Absurdist Humor', 'Brain Rot'];
 
 const MeTubeHomeScreen = ({ navigation }) => {
   const [activeCategory, setActiveCategory] = useState('All');
